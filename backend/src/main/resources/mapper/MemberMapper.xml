@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.wtbu.mapper.MemberMapper">
+
+    <resultMap id="BaseResultMap" type="edu.wtbu.entity.Member">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="gid" column="gid" jdbcType="INTEGER"/>
+            <result property="uid" column="uid" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,gid,uid,
+        status
+    </sql>
+    <select id="getMemberByUserIdAndFriendId" resultType="java.util.HashMap">
+        SELECT member.id AS memberId, `user`.id AS userId, member.uid AS friendId
+        FROM member
+                 LEFT JOIN friend_group ON friend_group.id = member.gid
+                 LEFT JOIN `user` ON `user`.id = friend_group.uid
+        WHERE `user`.id = #{userId}
+          AND member.uid = #{friendId}
+    </select>
+</mapper>

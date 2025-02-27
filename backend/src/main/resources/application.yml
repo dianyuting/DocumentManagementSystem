@@ -1,0 +1,71 @@
+spring.application.name: DocumentManagementSystem
+
+ftp_ip: 192.168.18.128
+ftp_port: 21
+ftp_user: dian
+ftp_pass: 123456
+
+spring:
+  #文件传输大小配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+  #数据库连接配置
+  datasource:
+    #???????
+    type: com.zaxxer.hikari.HikariDataSource
+    #??????????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/file_management?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: 123456
+  #邮箱配置
+  mail:
+    #配置smtp服务主机地址
+    #qq邮箱:smtp.qq.com sina:smtp.sina.cn aliyun:smtp.aliyun.com 163:smtp.163.com
+    host: smtp.qq.com
+    username: 3204875506@qq.com
+    password: mdljwszrbxkkdeda
+    #587或465,25明文
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        #配置SSL 加密工厂
+        smtp:
+          ssl:
+            #本机测试先开放ssl
+            enable: true
+            socketFactory:
+              class: com.sun.mail.util.MailSSLSocketFactory
+              fallback: false
+            required: false
+        debug: true
+  #配置redis
+  data:
+    redis:
+      port: 6379
+      host: 192.168.18.128
+      database: 0
+      password: 'huyuting'
+      jedis:
+        pool:
+          #最大连接
+          max-active: 8
+          #最大阻塞等待时间
+          max-wait: 100ms
+          #最大空闲连接
+          max-idle: 8
+          #最小空闲连接
+          min-idle: 0
+      #连接超时
+      connect-timeout: 5000ms
+
+#MyBatis-Plus????
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+server:
+  port: 9090

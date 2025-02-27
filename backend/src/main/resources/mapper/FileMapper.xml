@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.wtbu.mapper.FileMapper">
+
+    <resultMap id="BaseResultMap" type="edu.wtbu.entity.File">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="parentDirectory" column="parent_directory" jdbcType="CHAR"/>
+            <result property="name" column="name" jdbcType="CHAR"/>
+            <result property="isFile" column="is_file" jdbcType="TINYINT"/>
+            <result property="uid" column="uid" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,parent_directory,name,
+        is_file,uid,create_time
+    </sql>
+    <select id="findFileByName" resultType="edu.wtbu.entity.File">
+        SELECT DISTINCT file.`name`, file.id, file.parent_directory, file.is_file, file.uid, file.create_time
+        FROM file
+                 LEFT JOIN
+             (SELECT tagged_files.file_id, tag.`name`, type
+              FROM tagged_files
+                       LEFT JOIN tag ON tagged_files.tag_id = tag.id) AS t ON t.file_id = file.id
+        WHERE file.uid = #{uid}
+          AND file.`name` LIKE #{name} ORDER BY is_file,`name`
+    </select>
+    <select id="findFileByNameAndType" resultType="edu.wtbu.entity.File">
+        SELECT  DISTINCT file.`name`,file.id, file.parent_directory, file.is_file, file.uid, file.create_time
+        FROM file
+                 INNER JOIN
+             (SELECT tagged_files.file_id, tag.`name`, type
+              FROM tagged_files
+                       LEFT JOIN tag ON tagged_files.tag_id = tag.id
+              WHERE type LIKE #{type}) AS t ON t.file_id = file.id
+        WHERE file.uid = #{uid}
+          AND file.`name` LIKE #{name} ORDER BY is_file,`name`
+    </select>
+    <select id="findFileByNameAndTagAndType" resultType="edu.wtbu.entity.File">
+        SELECT DISTINCT file.`name`, file.id, file.parent_directory, file.is_file, file.uid, file.create_time
+        FROM file
+                 INNER JOIN
+             (SELECT tagged_files.file_id, tag.`name`, type
+              FROM tagged_files
+                       LEFT JOIN tag ON tagged_files.tag_id = tag.id
+              WHERE type LIKE #{type}
+                and name like #{tag}) AS t ON t.file_id = file.id
+        WHERE file.uid = #{uid}
+          AND file.`name` LIKE #{name} ORDER BY is_file,`name`
+    </select>
+
+</mapper>
